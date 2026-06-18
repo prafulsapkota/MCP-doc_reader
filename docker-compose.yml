@@ -1,0 +1,14 @@
+services:
+  mcp-server:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: doc-reader-mcp
+    restart: unless-stopped
+    # Mount local directories or files inside the container to allow reading host files if needed.
+    # Adjust this path as per deployment requirements.
+    volumes:
+      - ./data:/data
+    # Stdio-based MCP servers usually interact via stdin/stdout, so keep stdin open and allocate tty
+    stdin_open: true
+    tty: true
