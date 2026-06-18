@@ -19,8 +19,8 @@ RUN pip install --no-cache-dir -r requirements.txt
 COPY main.py .
 COPY src/ ./src/
 
-# Expose any ports if fastmcp is ever configured to run on sse (default is stdio for MCP, but good practice)
+# Expose HTTP port
 EXPOSE 8000
 
-# Set entry point to run the MCP server
-CMD ["python", "main.py", "run"]
+# Run the server using HTTP transport on port 8000
+CMD ["python", "main.py", "run", "--transport", "http", "--port", "8000"]

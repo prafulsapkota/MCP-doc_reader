@@ -1,5 +1,7 @@
 from typing import Optional, Generator
 import re
+import io
+import base64
 
 def parse_page_range(page_range: Optional[str], total_pages: int) -> range:
     """Parses optional page range string like '1-5', '3', '2-' and returns a range object (0-indexed)."""
@@ -35,3 +37,15 @@ def stream_text_by_sentences(text: str) -> Generator[str, None, None]:
         s = sentence.strip()
         if s:
             yield s + "\n"
+
+def decode_b64_to_stream(b64_str: str) -> io.BytesIO:
+    """Decodes a base64 encoded string to an in-memory BytesIO stream, stripping data URL prefixes if present."""
+    if "," in b64_str:
+        # Strip potential data URL prefix like "data:application/pdf;base64,"
+        parts = b64_str.split(",", 1)
+        # Check if the prefix has base64 in it to ensure it's a data URL
+        if "base64" in parts[0]:
+            b64_str = parts[1]
+    
+    decoded = base64.b64decode(b64_str.strip())
+    return io.BytesIO(decoded)
